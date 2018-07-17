@@ -36,8 +36,7 @@ public class InterconnectionsController {
                                                            @Valid @RequestParam  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  final LocalDateTime arrivalDateTime) {
         Preconditions.checkArgument(departureDateTime.isAfter(LocalDateTime.now()),"Departure date time must be after now");
         Preconditions.checkArgument(departureDateTime.isBefore(arrivalDateTime), "Departure date time must be before Arrival date time");
-        throw new InterconnectException("No obtained routes");
-//        List<FlightResponse> flights = interconnectionsService.obtainFlights(departure, arrival, departureDateTime, arrivalDateTime);
-//        return new ResponseEntity<>(flights, HttpStatus.ACCEPTED);
+        List<FlightResponse> flights = interconnectionsService.obtainFlights(departure, arrival, departureDateTime, arrivalDateTime);
+        return new ResponseEntity<>(flights, HttpStatus.ACCEPTED);
     }
 }

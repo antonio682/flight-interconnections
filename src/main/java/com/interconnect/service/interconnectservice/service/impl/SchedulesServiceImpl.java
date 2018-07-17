@@ -2,6 +2,7 @@ package com.interconnect.service.interconnectservice.service.impl;
 
 import com.interconnect.service.interconnectservice.dto.ScheduleResponse;
 import com.interconnect.service.interconnectservice.service.SchedulesService;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -34,6 +35,7 @@ public class SchedulesServiceImpl implements SchedulesService {
         this.restTemplate = restTemplate;
     }
 
+    @HystrixCommand(fallbackMethod = "schedulesRoutesFallback")
     public ScheduleResponse getSchedules(final String departure, final String arrival,
                                                final Integer year, final Integer month) {
         Map<String, String> parameters = new HashMap<>();
@@ -51,5 +53,10 @@ public class SchedulesServiceImpl implements SchedulesService {
         return restTemplate.exchange(routesUri, HttpMethod.GET, new HttpEntity<>(HttpEntity.EMPTY),
                 new ParameterizedTypeReference<ScheduleResponse>() {
                 }).getBody();
+    }
+
+    public ScheduleResponse schedulesRoutesFallback(final String departure, final String arrival,
+                                                    final Integer year, final Integer month) {
+        return null;
     }
 }

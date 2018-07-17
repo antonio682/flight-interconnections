@@ -45,11 +45,6 @@ public class RoutesServiceImpl implements RoutesService {
                 .path(routesResourcePath)
                 .build()
                 .toUri();
-        try {
-            Thread.sleep(10000l);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         return restTemplate.exchange(routesUri, HttpMethod.GET, new HttpEntity<>(HttpEntity.EMPTY),
                 new ParameterizedTypeReference<List<RouteResponse>>() {
                 }).getBody();
