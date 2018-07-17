@@ -43,6 +43,7 @@ public class InterconnectionsServiceImpl implements InterconnectionsService {
             if (route.getConnectingAirport() != null) {
 
                flightsWIthConnection =  obtainConnectingFlights(departure, arrival, departureDatetime, arrivalDateTime, route);
+               flightsWIthConnection.forEach(flight -> flight.setStops("1"));
 
             }
             List<FlightResponse> response = new ArrayList<>();
@@ -63,7 +64,7 @@ public class InterconnectionsServiceImpl implements InterconnectionsService {
 
            LegResponse secondLegToAdd = findFlightsFromSchedules(departureDatetime, arrivalDateTime, route.getConnectingAirport(), arrival).stream()
                     .filter(secondLeg -> isAfterTwoHours(firstLeg, secondLeg))
-                    .findFirst().orElseThrow(() -> new RuntimeException()).getLegs().get(0);
+                    .findFirst().orElseThrow(() -> new InterconnectException("Error setting second leg")).getLegs().get(0);
             firstLeg.getLegs().add(secondLegToAdd);
             response.add(firstLeg);
         });
@@ -83,13 +84,13 @@ public class InterconnectionsServiceImpl implements InterconnectionsService {
         while (currentDate.isBefore(arrivalDateTime) || currentDate.isEqual(arrivalDateTime)) {
             List<ScheduleResponse> totalResponses = new ArrayList<>();
             List<ScheduleResponse> previousSchedules = (List<ScheduleResponse>) scheduleByYear.get(currentDate);
-            ScheduleResponse currentSchdulesRequest = schedulesService.getSchedules(departure, arrival, currentDate.getYear(), currentDate.getMonth().getValue());
+            ScheduleResponse currentSchehdulesRequest = schedulesService.getSchedules(departure, arrival, currentDate.getYear(), currentDate.getMonth().getValue());
 
             if (previousSchedules != null)
                 totalResponses.addAll(previousSchedules);
 
-            if (currentSchdulesRequest != null)
-                totalResponses.add(currentSchdulesRequest);
+            if (currentSchehdulesRequest != null)
+                totalResponses.add(currentSchehdulesRequest);
 
             scheduleByYear.put(currentDate, totalResponses);
             currentDate = currentDate.plusMonths(1L);
