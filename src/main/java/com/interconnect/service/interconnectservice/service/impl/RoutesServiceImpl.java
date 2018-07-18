@@ -35,7 +35,7 @@ public class RoutesServiceImpl implements RoutesService {
         this.restTemplate = restTemplate;
     }
 
-    @HystrixCommand(fallbackMethod = "obtainRoutesFallback")
+    @HystrixCommand(fallbackMethod = "obtainRoutesFallback",  commandKey = "customCommandKey")
     @Override
     public List<RouteResponse> obtainRoutes()  {
 

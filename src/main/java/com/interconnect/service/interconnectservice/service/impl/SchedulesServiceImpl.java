@@ -35,7 +35,7 @@ public class SchedulesServiceImpl implements SchedulesService {
         this.restTemplate = restTemplate;
     }
 
-    @HystrixCommand(fallbackMethod = "schedulesRoutesFallback")
+    @HystrixCommand(fallbackMethod = "schedulesRoutesFallback" ,commandKey = "customCommandKey")
     public ScheduleResponse getSchedules(final String departure, final String arrival,
                                                final Integer year, final Integer month) {
         Map<String, String> parameters = new HashMap<>();
